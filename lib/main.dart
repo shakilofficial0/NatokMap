@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'theme/app_theme.dart';
+
 import 'controllers/landmark_controller.dart';
-import 'views/map_view.dart';
-import 'views/list_view.dart' as list;
+import 'theme/app_theme.dart';
 import 'views/form_view.dart';
+import 'views/list_view.dart' as list;
+import 'views/map_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     const MapView(),
-    const list.ListView(),
+    const list.LandmarkListView(),
     const FormView(),
   ];
 

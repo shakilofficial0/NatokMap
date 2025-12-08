@@ -20,7 +20,6 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   final MapController _mapController = MapController();
   static const LatLng bangladeshCenter = LatLng(23.6850, 90.3563);
-  Landmark? _selectedLandmark;
 
   @override
   void initState() {
@@ -31,9 +30,6 @@ class _MapViewState extends State<MapView> {
   }
 
   void _showLandmarkDetails(Landmark landmark) {
-    setState(() {
-      _selectedLandmark = landmark;
-    });
     
     showModalBottomSheet(
       context: context,

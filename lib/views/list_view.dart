@@ -12,14 +12,14 @@ import 'form_view.dart';
 import 'landmark_detail_sheet.dart';
 
 /// List View: Shows landmarks as scrollable cards
-class ListView extends StatefulWidget {
-  const ListView({super.key});
+class LandmarkListView extends StatefulWidget {
+  const LandmarkListView({super.key});
 
   @override
-  State<ListView> createState() => _ListViewState();
+  State<LandmarkListView> createState() => _LandmarkListViewState();
 }
 
-class _ListViewState extends State<ListView> {
+class _LandmarkListViewState extends State<LandmarkListView> {
   @override
   void initState() {
     super.initState();
