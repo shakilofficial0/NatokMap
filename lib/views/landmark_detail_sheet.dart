@@ -31,15 +31,19 @@ class LandmarkDetailSheet extends StatelessWidget {
   void _deleteLandmark(BuildContext context) async {
     final controller = context.read<LandmarkController>();
     
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.glassBlue,
+        backgroundColor: isDark ? AppTheme.glassBlue : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(
-            color: AppTheme.primaryNeon.withOpacity(0.3),
+            color: isDark 
+                ? AppTheme.primaryNeon.withOpacity(0.3)
+                : Colors.grey.withOpacity(0.3),
             width: 1,
           ),
         ),
@@ -95,14 +99,27 @@ class LandmarkDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
-        gradient: AppTheme.navyGradient,
+        gradient: isDark 
+            ? AppTheme.navyGradient
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.white,
+                  Color(0xFFF5F5F5),
+                ],
+              ),
         borderRadius: const BorderRadius.vertical(
           top: Radius.circular(24),
         ),
         border: Border.all(
-          color: AppTheme.primaryNeon.withOpacity(0.3),
+          color: isDark 
+              ? AppTheme.primaryNeon.withOpacity(0.3)
+              : Colors.grey.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -118,7 +135,9 @@ class LandmarkDetailSheet extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryNeon.withOpacity(0.3),
+                  color: isDark 
+                      ? AppTheme.primaryNeon.withOpacity(0.3)
+                      : Colors.grey.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -171,10 +190,10 @@ class LandmarkDetailSheet extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.my_location,
                         size: 20,
-                        color: AppTheme.primaryNeon,
+                        color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -186,10 +205,10 @@ class LandmarkDetailSheet extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.location_on,
                         size: 20,
-                        color: AppTheme.primaryNeon,
+                        color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -212,9 +231,9 @@ class LandmarkDetailSheet extends StatelessWidget {
                     icon: const Icon(Icons.edit, size: 20),
                     label: const Text('Edit'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppTheme.primaryNeon,
-                      side: const BorderSide(
-                        color: AppTheme.primaryNeon,
+                      foregroundColor: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
+                      side: BorderSide(
+                        color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                         width: 1,
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
