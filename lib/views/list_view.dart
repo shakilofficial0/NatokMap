@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/landmark_controller.dart';
+import '../controllers/theme_controller.dart';
 import '../models/landmark.dart';
 import '../theme/app_theme.dart';
 import '../widgets/dialogs.dart';
@@ -57,46 +58,144 @@ class _LandmarkListViewState extends State<LandmarkListView> {
           backgroundColor: AppTheme.glassBlue,
           child: Column(
             children: [
-              // Header with count
+              // App Header with Theme Switcher
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                    Text(
-                      '${controller.landmarks.length} Landmarks',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    if (!controller.isOnline)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppTheme.glassBlue.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.orange,
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                    // App name on left, theme switcher on right
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // App Name with Icon
+                        Row(
                           children: [
-                            const Icon(
-                              Icons.cloud_off,
-                              size: 14,
-                              color: Colors.orange,
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? AppTheme.primaryNeon.withOpacity(0.2)
+                                    : const Color(0xFF0066FF).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                      ? AppTheme.primaryNeon
+                                      : const Color(0xFF0066FF),
+                                  width: 2,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.map,
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? AppTheme.primaryNeon
+                                    : const Color(0xFF0066FF),
+                                size: 24,
+                              ),
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: 12),
                             Text(
-                              'Offline',
-                              style: Theme.of(context).textTheme.bodySmall,
+                              'NatokMap',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                        // Theme switcher
+                        Consumer<ThemeController>(
+                          builder: (context, themeController, _) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? AppTheme.glassBlue.withOpacity(0.3)
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.wb_sunny,
+                                    size: 18,
+                                    color: themeController.isDarkMode
+                                        ? Colors.grey
+                                        : Colors.orange,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Switch(
+                                    value: themeController.isDarkMode,
+                                    onChanged: (value) {
+                                      themeController.toggleTheme();
+                                    },
+                                    activeColor: Theme.of(context).brightness == Brightness.dark
+                                        ? AppTheme.primaryNeon
+                                        : const Color(0xFF0066FF),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Icon(
+                                    Icons.nightlight_round,
+                                    size: 18,
+                                    color: themeController.isDarkMode
+                                        ? AppTheme.primaryNeon
+                                        : Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Count and offline indicator
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${controller.landmarks.length} Landmarks',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        if (!controller.isOnline)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? AppTheme.glassBlue.withOpacity(0.5)
+                                  : Colors.orange.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.cloud_off,
+                                  size: 14,
+                                  color: Colors.orange,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Offline',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -341,7 +440,6 @@ class LandmarkCard extends StatelessWidget {
                 Text(
                   landmark.title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                   maxLines: 2,
@@ -350,10 +448,12 @@ class LandmarkCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.location_on,
                       size: 14,
-                      color: AppTheme.primaryNeon,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppTheme.primaryNeon
+                          : const Color(0xFF0066FF),
                     ),
                     const SizedBox(width: 4),
                     Expanded(
@@ -371,10 +471,12 @@ class LandmarkCard extends StatelessWidget {
           ),
 
           // Arrow icon
-          const Icon(
+          Icon(
             Icons.arrow_forward_ios,
             size: 16,
-            color: AppTheme.primaryNeon,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppTheme.primaryNeon
+                : const Color(0xFF0066FF),
           ),
         ],
       ),

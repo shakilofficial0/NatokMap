@@ -227,10 +227,21 @@ class _FormViewState extends State<FormView> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppTheme.navyGradient,
+          gradient: isDark 
+              ? AppTheme.navyGradient
+              : const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFFF5F5F5),
+                    Color(0xFFE8E8E8),
+                  ],
+                ),
         ),
         child: SafeArea(
           child: Column(
@@ -240,14 +251,15 @@ class _FormViewState extends State<FormView> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: AppTheme.primaryNeon,
+                    if (_isEditMode)
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
+                    if (_isEditMode) const SizedBox(width: 8),
                     Text(
                       _isEditMode ? 'Edit Landmark' : 'New Landmark',
                       style: Theme.of(context).textTheme.displaySmall,
@@ -285,18 +297,18 @@ class _FormViewState extends State<FormView> {
                                       right: 8,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: AppTheme.glassBlue,
+                                          color: isDark ? AppTheme.glassBlue : Colors.white,
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                            color: AppTheme.primaryNeon,
+                                            color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                                             width: 1,
                                           ),
                                         ),
                                         child: IconButton(
                                           onPressed: _showImageSourceDialog,
-                                          icon: const Icon(
+                                          icon: Icon(
                                             Icons.edit,
-                                            color: AppTheme.primaryNeon,
+                                            color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                                           ),
                                         ),
                                       ),
@@ -308,7 +320,9 @@ class _FormViewState extends State<FormView> {
                                     Icon(
                                       Icons.add_photo_alternate,
                                       size: 80,
-                                      color: AppTheme.primaryNeon.withOpacity(0.5),
+                                      color: isDark 
+                                          ? AppTheme.primaryNeon.withOpacity(0.5)
+                                          : const Color(0xFF0066FF).withOpacity(0.5),
                                     ),
                                     const SizedBox(height: 12),
                                     Text(
@@ -328,12 +342,12 @@ class _FormViewState extends State<FormView> {
                         // Title field
                         TextFormField(
                           controller: _titleController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Title',
                             hintText: 'Enter landmark title',
                             prefixIcon: Icon(
                               Icons.title,
-                              color: AppTheme.primaryNeon,
+                              color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                             ),
                           ),
                           validator: (value) {
@@ -348,12 +362,12 @@ class _FormViewState extends State<FormView> {
                         // Latitude field
                         TextFormField(
                           controller: _latitudeController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Latitude',
                             hintText: 'Enter latitude',
                             prefixIcon: Icon(
                               Icons.my_location,
-                              color: AppTheme.primaryNeon,
+                              color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                             ),
                           ),
                           keyboardType: const TextInputType.numberWithOptions(
@@ -379,12 +393,12 @@ class _FormViewState extends State<FormView> {
                         // Longitude field
                         TextFormField(
                           controller: _longitudeController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Longitude',
                             hintText: 'Enter longitude',
                             prefixIcon: Icon(
                               Icons.location_on,
-                              color: AppTheme.primaryNeon,
+                              color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                             ),
                           ),
                           keyboardType: const TextInputType.numberWithOptions(
@@ -417,9 +431,9 @@ class _FormViewState extends State<FormView> {
                             ),
                             label: const Text('Use Current Location'),
                             style: OutlinedButton.styleFrom(
-                              foregroundColor: AppTheme.accentNeon,
-                              side: const BorderSide(
-                                color: AppTheme.accentNeon,
+                              foregroundColor: isDark ? AppTheme.accentNeon : const Color(0xFF03DAC6),
+                              side: BorderSide(
+                                color: isDark ? AppTheme.accentNeon : const Color(0xFF03DAC6),
                                 width: 1,
                               ),
                               padding: const EdgeInsets.symmetric(vertical: 12),

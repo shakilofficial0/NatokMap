@@ -8,14 +8,18 @@ void showErrorDialog(
   required String title,
   required String message,
 }) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      backgroundColor: AppTheme.glassBlue,
+      backgroundColor: isDark ? AppTheme.glassBlue : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: AppTheme.primaryNeon.withOpacity(0.3),
+          color: isDark 
+              ? AppTheme.primaryNeon.withOpacity(0.3)
+              : Colors.red.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -45,7 +49,7 @@ void showErrorDialog(
           child: Text(
             'OK',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: AppTheme.primaryNeon,
+                  color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                 ),
           ),
         ),
@@ -59,29 +63,34 @@ void showSuccessSnackbar(
   BuildContext context, {
   required String message,
 }) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final successColor = isDark ? AppTheme.accentNeon : const Color(0xFF03DAC6);
+  
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.check_circle,
-            color: AppTheme.accentNeon,
+            color: successColor,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: isDark ? Colors.white : Colors.black87,
+              ),
             ),
           ),
         ],
       ),
-      backgroundColor: AppTheme.glassBlue,
+      backgroundColor: isDark ? AppTheme.glassBlue : Colors.white,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: AppTheme.accentNeon.withOpacity(0.5),
+          color: successColor.withOpacity(0.5),
           width: 1,
         ),
       ),
@@ -95,29 +104,34 @@ void showInfoSnackbar(
   BuildContext context, {
   required String message,
 }) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final infoColor = isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF);
+  
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.info_outline,
-            color: AppTheme.primaryNeon,
+            color: infoColor,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: isDark ? Colors.white : Colors.black87,
+              ),
             ),
           ),
         ],
       ),
-      backgroundColor: AppTheme.glassBlue,
+      backgroundColor: isDark ? AppTheme.glassBlue : Colors.white,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: AppTheme.primaryNeon.withOpacity(0.5),
+          color: infoColor.withOpacity(0.5),
           width: 1,
         ),
       ),

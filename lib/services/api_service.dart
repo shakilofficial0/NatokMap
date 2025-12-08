@@ -189,11 +189,7 @@ class ApiService {
   Future<ApiResponse<void>> deleteLandmark(int id) async {
     try {
       final response = await _dio.delete(
-        apiEndpoint,
-        data: {'id': id},
-        options: Options(
-          contentType: 'application/x-www-form-urlencoded',
-        ),
+        '$apiEndpoint?id=$id',
       );
 
       if (response.statusCode == 200) {

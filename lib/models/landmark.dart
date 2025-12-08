@@ -25,12 +25,25 @@ class Landmark {
 
   /// Create Landmark from JSON
   factory Landmark.fromJson(Map<String, dynamic> json) {
+    // Convert relative image URL to absolute URL
+    String? imageUrl;
+    if (json['image'] != null && json['image'].toString().isNotEmpty) {
+      final imagePath = json['image'].toString();
+      if (!imagePath.startsWith('http')) {
+        // Relative path - prepend base URL
+        imageUrl = 'https://labs.anontech.info/cse489/t3/$imagePath';
+      } else {
+        // Already absolute URL
+        imageUrl = imagePath;
+      }
+    }
+
     return Landmark(
       id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
       title: json['title'] ?? '',
       latitude: _parseDouble(json['lat']),
       longitude: _parseDouble(json['lon']),
-      imageUrl: json['image'],
+      imageUrl: imageUrl,
       createdAt: json['created_at'] != null 
           ? DateTime.tryParse(json['created_at']) 
           : null,

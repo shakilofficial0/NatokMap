@@ -256,4 +256,138 @@ class AppTheme {
       ],
     );
   }
+
+  // Light Theme
+  static ThemeData get lightTheme {
+    return ThemeData(
+      brightness: Brightness.light,
+      primaryColor: const Color(0xFF0066FF),
+      scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+      
+      colorScheme: const ColorScheme.light(
+        primary: Color(0xFF0066FF),
+        secondary: Color(0xFF6200EE),
+        tertiary: Color(0xFF03DAC6),
+        surface: Colors.white,
+        background: Color(0xFFF5F5F5),
+        error: Color(0xFFB00020),
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: Colors.black,
+        onBackground: Colors.black,
+      ),
+
+      textTheme: TextTheme(
+        displayLarge: GoogleFonts.inter(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        displayMedium: GoogleFonts.inter(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        displaySmall: GoogleFonts.inter(
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+        headlineMedium: GoogleFonts.inter(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+        titleLarge: GoogleFonts.inter(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+        titleMedium: GoogleFonts.inter(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Colors.black87,
+        ),
+        bodyLarge: GoogleFonts.inter(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+          color: Colors.black,
+        ),
+        bodyMedium: GoogleFonts.inter(
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          color: Colors.black87,
+        ),
+        bodySmall: GoogleFonts.inter(
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
+          color: Colors.black54,
+        ),
+        labelLarge: GoogleFonts.inter(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+      ),
+
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 2,
+        centerTitle: true,
+        titleTextStyle: GoogleFonts.inter(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+
+      cardTheme: CardThemeData(
+        color: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.black.withOpacity(0.1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        labelStyle: const TextStyle(color: Colors.black54),
+        hintStyle: const TextStyle(color: Colors.black38),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF0066FF), width: 2),
+        ),
+      ),
+
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Colors.white,
+        selectedItemColor: Color(0xFF0066FF),
+        unselectedItemColor: Colors.black54,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+        type: BottomNavigationBarType.fixed,
+        elevation: 8,
+      ),
+
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: Color(0xFF0066FF),
+        foregroundColor: Colors.white,
+      ),
+
+      iconTheme: const IconThemeData(
+        color: Colors.black,
+      ),
+    );
+  }
 }

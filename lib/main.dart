@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/landmark_controller.dart';
+import 'controllers/theme_controller.dart';
 import 'theme/app_theme.dart';
 import 'views/form_view.dart';
 import 'views/list_view.dart' as list;
@@ -40,12 +41,21 @@ class NatokMapApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => LandmarkController(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => ThemeController(),
+        ),
       ],
-      child: MaterialApp(
-        title: 'NatokMap - Bangladesh Landmarks',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.darkTheme,
-        home: const MainScreen(),
+      child: Consumer<ThemeController>(
+        builder: (context, themeController, _) {
+          return MaterialApp(
+            title: 'NatokMap - Bangladesh Landmarks',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeController.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            home: const MainScreen(),
+          );
+        },
       ),
     );
   }
@@ -87,11 +97,22 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       extendBody: true,
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppTheme.navyGradient,
+          gradient: isDark 
+              ? AppTheme.navyGradient 
+              : const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFFF5F5F5),
+                    Color(0xFFE8E8E8),
+                  ],
+                ),
         ),
         child: SafeArea(
           child: _pages[_currentIndex],
@@ -101,7 +122,9 @@ class _MainScreenState extends State<MainScreen> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: AppTheme.primaryNeon.withOpacity(0.1),
+              color: isDark 
+                  ? AppTheme.primaryNeon.withOpacity(0.1)
+                  : Colors.black.withOpacity(0.1),
               blurRadius: 20,
               spreadRadius: 0,
               offset: const Offset(0, -5),
@@ -119,20 +142,23 @@ class _MainScreenState extends State<MainScreen> {
                 _currentIndex = index;
               });
             },
-            backgroundColor: AppTheme.glassBlue,
-            selectedItemColor: AppTheme.primaryNeon,
-            unselectedItemColor: Colors.white38,
+            backgroundColor: isDark ? AppTheme.glassBlue : Colors.white,
+            selectedItemColor: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
+            unselectedItemColor: isDark ? Colors.white38 : Colors.black54,
             type: BottomNavigationBarType.fixed,
             elevation: 0,
             selectedFontSize: 12,
             unselectedFontSize: 11,
             items: _navigationItems.map((item) {
+              final isSelected = _navigationItems.indexOf(item) == _currentIndex;
               return BottomNavigationBarItem(
                 icon: Icon(item.icon),
                 activeIcon: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryNeon.withOpacity(0.2),
+                    color: isDark 
+                        ? AppTheme.primaryNeon.withOpacity(0.2)
+                        : const Color(0xFF0066FF).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(item.activeIcon),

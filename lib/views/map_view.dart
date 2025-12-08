@@ -47,23 +47,10 @@ class _MapViewState extends State<MapView> {
         height: 40,
         child: GestureDetector(
           onTap: () => _showLandmarkDetails(landmark),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppTheme.primaryNeon,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryNeon.withOpacity(0.6),
-                  blurRadius: 15,
-                  spreadRadius: 3,
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.location_on,
-              color: Colors.black,
-              size: 28,
-            ),
+          child: const Icon(
+            Icons.location_on,
+            color: Colors.black,
+            size: 40,
           ),
         ),
       );
@@ -92,7 +79,7 @@ class _MapViewState extends State<MapView> {
               ),
               children: [
                 TileLayer(
-                  urlTemplate: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.shakil.map.natok_map',
                   maxZoom: 20,
                 ),
@@ -112,11 +99,17 @@ class _MapViewState extends State<MapView> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: AppTheme.glassBlue.withOpacity(0.8),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppTheme.glassBlue.withOpacity(0.8)
+                      : (controller.isOnline
+                          ? const Color(0xFF03DAC6).withOpacity(0.1)
+                          : Colors.orange.withOpacity(0.1)),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: controller.isOnline
-                        ? AppTheme.accentNeon
+                        ? (Theme.of(context).brightness == Brightness.dark
+                            ? AppTheme.accentNeon
+                            : const Color(0xFF03DAC6))
                         : Colors.orange,
                     width: 1,
                   ),
@@ -130,7 +123,9 @@ class _MapViewState extends State<MapView> {
                           : Icons.cloud_off,
                       size: 16,
                       color: controller.isOnline
-                          ? AppTheme.accentNeon
+                          ? (Theme.of(context).brightness == Brightness.dark
+                              ? AppTheme.accentNeon
+                              : const Color(0xFF03DAC6))
                           : Colors.orange,
                     ),
                     const SizedBox(width: 6),
