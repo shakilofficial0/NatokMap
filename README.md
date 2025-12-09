@@ -1,243 +1,323 @@
-# NatokMap - Bangladesh Landmarks Application
+# NatokMap 📍
 
-A futuristic Android application for managing and visualizing landmark records in Bangladesh. Built with Flutter following MVC architecture.
+A Flutter-based Android application for managing and visualizing landmark records in Bangladesh. NatokMap integrates with a remote REST API to provide comprehensive landmark management with offline support and an interactive map interface.
 
-## Features
+## 📱 App Summary
 
-### 🗺️ Interactive Map View
-- OpenStreetMap integration with custom dark theme
-- Interactive markers for landmarks
+NatokMap is a full-featured landmark management application that allows users to:
+- View landmarks on an interactive OpenStreetMap
+- Browse landmarks in a list view with swipe gestures
+- Create new landmarks with GPS location and photos
+- Edit and delete existing landmarks
+- Work offline with local SQLite caching
+- Switch between light and dark themes
+
+The app follows an MVC architecture pattern and uses Provider for state management, ensuring clean separation of concerns and maintainable code.
+
+## ✨ Feature List
+
+### 🗺️ Map View
+- Interactive OpenStreetMap display
+- Black location markers for all landmarks
+- Tap markers to view landmark details
+- Real-time online/offline indicator
+- Full zoom and pan controls
 - Centered on Bangladesh (23.6850°N, 90.3563°E)
-- Bottom sheet details on marker tap
-- Real-time online/offline status indicator
 
-### 📋 List View
-- Scrollable card-based landmark list
-- Cached network images
-- Swipe gestures for edit/delete
+### 📋 Records View
+- Scrollable list of all landmarks with card-based layout
+- Thumbnail images (80×80px) with cached loading
+- **Swipe left** to edit a landmark
+- **Swipe right** to delete a landmark
 - Pull-to-refresh functionality
+- Landmark count display
+- App branding with logo and name (left side)
+- **Theme switcher** for Light/Dark mode (right side)
 - Empty state handling
 
-### ➕ Form View
-- Add new landmarks with image upload
-- Edit existing landmarks
-- Auto-detect current GPS location
-- Image picker (Gallery/Camera)
-- Automatic image resize to 800x600
+### ➕ New Entry Form
+- Image picker with camera or gallery support
+- Automatic image resizing to 800×600px
+- GPS-based location detection with "Use Current Location" button
+- Manual coordinate entry (latitude/longitude)
 - Form validation
+- **Stays on page after creation** (no redirect)
+- Success notifications via snackbar
+- Auto-clear form after successful submission
+- Form reloads GPS location for next entry
 
-### 🎨 Design
-- **Futuristic Dark Theme**: Navy gradient background with neon accents
-- **Glass Card Effect**: Semi-transparent cards with neon borders
-- **Neon Glow Buttons**: Cyan and magenta gradient buttons
-- **Clean Typography**: Orbitron and Rajdhani fonts
-- **Smooth Animations**: Modern transitions and effects
+### ✏️ Edit Landmark
+- Pre-filled form with existing landmark data
+- Update title, latitude, and longitude
+- Back button to return to previous screen
+- Success notifications
+
+### 🎨 Theming
+- **Dark Mode**: Navy gradient background (#0A0E27) with neon accents
+  - Neon Cyan (#00F0FF), Magenta (#FF00E5), Green (#00FF88)
+  - Glass card effects with neon borders
+  - Futuristic design with glow effects
+- **Light Mode**: Clean white/light gray backgrounds
+  - Black text (#000000) on white backgrounds
+  - Blue accent colors (#0066FF)
+  - Subtle shadows and borders
+- Theme switcher accessible in Records tab header
+- All UI components theme-aware (cards, dialogs, forms, buttons, sheets)
 
 ### 💾 Offline Support
-- SQLite database for local caching
+- SQLite local database for landmark caching
+- Works completely offline with cached data
+- Automatic synchronization when connection restored
+- Visual offline/online indicators throughout the app
 - Offline-first data strategy
-- Automatic sync when online
-- Offline mode indicator
 
-## Architecture
+### 🔄 API Integration
+- REST API communication with PHP/SQLite backend
+- Full CRUD operations: Create, Read, Update, Delete
+- Image upload with multipart/form-data
+- Efficient data synchronization
+- Error handling with user feedback
 
-### MVC Pattern
+## 📁 Project Structure
+
+### MVC Architecture
 ```
 lib/
-├── models/              # Data models
-│   ├── landmark.dart
-│   └── api_response.dart
-├── views/               # UI screens
-│   ├── map_view.dart
-│   ├── list_view.dart
-│   ├── form_view.dart
-│   └── landmark_detail_sheet.dart
-├── controllers/         # Business logic
-│   └── landmark_controller.dart
-├── services/            # External services
-│   ├── api_service.dart
-│   ├── image_service.dart
-│   └── location_service.dart
-├── repositories/        # Data management
-│   └── landmark_repository.dart
-├── database/            # Local storage
-│   └── database_helper.dart
-├── widgets/             # Reusable UI components
-│   ├── glass_card.dart
-│   ├── neon_button.dart
-│   ├── neon_loading.dart
-│   └── dialogs.dart
-├── theme/               # App styling
-│   └── app_theme.dart
-└── main.dart           # Entry point
+├── main.dart                      # App entry point with Provider setup
+├── models/
+│   └── landmark.dart              # Landmark data model with JSON serialization
+├── controllers/
+│   ├── landmark_controller.dart   # Landmark state management
+│   └── theme_controller.dart      # Theme state management
+├── services/
+│   ├── api_service.dart           # REST API communication (Dio)
+│   └── database_service.dart      # SQLite database operations
+├── views/
+│   ├── map_view.dart              # Map screen with OpenStreetMap
+│   ├── list_view.dart             # Records list screen
+│   ├── form_view.dart             # New/Edit entry form
+│   └── landmark_detail_sheet.dart # Landmark detail modal sheet
+└── theme/
+    └── app_theme.dart             # Light and dark theme definitions
 ```
 
-## API Endpoints
+## 🔌 API Endpoints
 
 **Base URL**: `https://labs.anontech.info/cse489/t3/api.php`
 
-### Create Landmark (POST)
-```
-Parameters:
-- title (String)
-- lat (Double)
-- lon (Double)
-- image (File)
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| **GET** | `api.php` | - | Retrieve all landmarks |
+| **POST** | `api.php` | `title`, `lat`, `lon`, `image` (file) | Create new landmark |
+| **PUT** | `api.php` | `id`, `title`, `lat`, `lon`, `image` (file, optional) | Update landmark |
+| **DELETE** | `api.php?id={id}` | `id` (query param) | Delete landmark |
+
+**Response Format:**
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "id": "1",
+      "title": "National Martyrs' Memorial",
+      "lat": "23.780800",
+      "lon": "90.349300",
+      "image": "uploads/landmark_123456.jpg"
+    }
+  ]
+}
 ```
 
-### Get All Landmarks (GET)
-```
-Response: JSON array of landmarks
-```
-
-### Update Landmark (PUT)
-```
-Parameters:
-- id (Integer)
-- title (String)
-- lat (Double)
-- lon (Double)
-- image (File, optional)
-```
-
-### Delete Landmark (DELETE)
-```
-Parameters:
-- id (Integer)
-```
-
-## Setup Instructions
+## 🚀 Setup Instructions
 
 ### Prerequisites
-- Flutter SDK (3.10.1 or higher)
-- Android Studio / VS Code
-- Android device or emulator
+- **Flutter SDK**: 3.10.1 or higher
+- **Dart SDK**: 3.10.1 or higher
+- **IDE**: Android Studio or VS Code with Flutter extensions
+- **Device**: Android device or emulator (API level 21+)
+- **Git**: For cloning the repository
 
-### Installation
+### Installation Steps
 
-1. **Install dependencies**
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/shakilofficial0/NatokMap.git
+   cd NatokMap
+   ```
+
+2. **Install dependencies**
    ```bash
    flutter pub get
    ```
 
-2. **Run the app**
+3. **Verify Flutter setup**
+   ```bash
+   flutter doctor
+   ```
+   Ensure all necessary components are installed.
+
+4. **Configure API endpoint** (if needed)
+   - Open `lib/services/api_service.dart`
+   - Verify the base URL: `https://labs.anontech.info/cse489/t3/api.php`
+
+5. **Run the app**
    ```bash
    flutter run
    ```
+   Select your target device when prompted.
 
-## Dependencies
+6. **Build APK** (for distribution)
+   ```bash
+   flutter build apk --release
+   ```
+   The APK will be located at `build/app/outputs/flutter-apk/app-release.apk`
+
+### Required Permissions
+The app requires the following Android permissions (automatically requested at runtime):
+- **Internet**: For REST API communication
+- **Location (Fine/Coarse)**: For GPS-based coordinate detection
+- **Camera**: For taking photos of landmarks
+- **Storage/Media**: For selecting images from gallery (Android 13+ uses READ_MEDIA_IMAGES)
+
+## 📦 Key Dependencies
 
 ```yaml
 dependencies:
-  # Map
-  flutter_map: ^7.0.2
-  latlong2: ^0.9.1
+  flutter:
+    sdk: flutter
+
+  # Map Display
+  flutter_map: ^7.0.2          # Interactive map widget
+  latlong2: ^0.9.0             # Geographic coordinates
   
   # Networking
-  http: ^1.2.0
-  dio: ^5.4.0
+  dio: ^5.4.0                  # HTTP client for API calls
+  http: ^1.2.0                 # Alternative HTTP client
   
-  # Database
-  sqflite: ^2.3.0
-  path_provider: ^2.1.1
+  # Local Database
+  sqflite: ^2.3.0              # SQLite database
+  path: ^1.8.3                 # Path manipulation
   
-  # Image
-  image_picker: ^1.0.5
-  image: ^4.1.3
-  cached_network_image: ^3.3.0
+  # Image Handling
+  image_picker: ^1.0.5         # Camera/Gallery picker
+  image: ^4.1.3                # Image processing/resizing
+  cached_network_image: ^3.3.0 # Efficient image caching
   
-  # Location
-  geolocator: ^11.0.0
-  permission_handler: ^11.1.0
+  # Location Services
+  geolocator: ^10.1.0          # GPS location access
   
-  # UI
-  google_fonts: ^6.1.0
-  shimmer: ^3.0.0
+  # UI/Theming
+  google_fonts: ^6.1.0         # Custom fonts (Orbitron, Rajdhani)
   
   # State Management
-  provider: ^6.1.1
+  provider: ^6.1.1             # State management solution
 ```
 
-## Permissions
+## ⚠️ Known Limitations
 
-- `INTERNET` - API communication
-- `ACCESS_FINE_LOCATION` - GPS location
-- `ACCESS_COARSE_LOCATION` - Network location
-- `CAMERA` - Take photos
-- `READ_EXTERNAL_STORAGE` - Access gallery
-- `WRITE_EXTERNAL_STORAGE` - Save images
-- `READ_MEDIA_IMAGES` - Android 13+ image access
+### 🚫 Cannot Update Landmarks with New Images
 
-## Key Features Implementation
+**Issue:** When editing an existing landmark, you can successfully update the title, latitude, and longitude. However, **uploading a new image during the update operation fails** with a "File upload failed" error.
 
-### 1. Bottom Navigation
-Three tabs for easy navigation:
-- Overview (Map)
-- Records (List)
-- New Entry (Form)
+**Technical Details:**
+- The PUT request with multipart/form-data is not being parsed correctly by the server
+- The server-side API uses a custom `parsePutRequest()` function for handling PUT requests
+- POST requests with images work perfectly (creating new landmarks)
+- Per project constraints, the server-side PHP code cannot be modified
 
-### 2. Offline Caching
-- All landmarks saved to SQLite
-- Automatic sync when online
-- Offline mode indicator
-- Seamless fallback to cached data
+**Workarounds:**
+1. **Create a new landmark** instead of updating if you need to change the image
+2. **Update only text fields** (title, latitude, longitude) when editing existing landmarks
+3. **Delete and recreate** the landmark if changing the image is critical
 
-### 3. Image Handling
-- Pick from gallery or camera
-- Automatic resize to 800x600
-- JPEG compression (85% quality)
-- Local caching
+**Status:** This is a known server-side limitation that cannot be resolved without modifying the backend API.
 
-### 4. Location Services
-- Auto-detect current location
-- GPS coordinate validation
-- Manual coordinate entry
+### Other Limitations
+- **Portrait Only**: App is locked to portrait orientation
+- **Android Only**: No iOS build configuration (though Flutter code is cross-platform compatible)
+- **Single User**: No authentication or multi-user support
+- **No Search**: No search or filter functionality for landmarks
+- **No Categories**: Landmarks cannot be organized into categories or tagged
+- **Minimum API Level**: Requires Android 5.0 (API level 21) or higher
 
-### 5. Error Handling
-- Success snackbars for operations
-- Error dialogs with details
-- Network error handling
-- Form validation
+## 🛠️ Troubleshooting
 
-## Theme Customization
+### Map tiles not loading
+- ✅ Check internet connection
+- ✅ Verify OpenStreetMap tile servers are accessible
+- ✅ Wait a few seconds for tiles to download
 
-The app uses a futuristic dark theme with:
-- **Primary Neon**: Cyan (#00F0FF)
-- **Secondary Neon**: Magenta (#FF00E5)
-- **Accent Neon**: Green (#00FF88)
-- **Dark Navy**: #0A0E27
-- **Glass Blue**: #1A2347
+### GPS location not working
+- ✅ Enable **Location Services** on your device
+- ✅ Grant **Location Permission** to the app when prompted
+- ✅ Ensure **GPS is enabled** (not just network location)
+- ✅ Go outdoors for better GPS signal
 
-## Code Quality
+### Images not displaying
+- ✅ Check internet connection for remote images
+- ✅ Verify image URLs are absolute paths
+- ✅ Check if image files exist on server
+- ✅ Clear app cache and restart
 
-- **Modular Architecture**: Small, focused files (< 200 lines)
-- **MVC Pattern**: Clear separation of concerns
-- **Reusable Components**: Custom widgets
-- **Type Safety**: Strict null safety
+### App crashes or build errors
+- ✅ Run `flutter clean` to clear build cache
+- ✅ Run `flutter pub get` to refresh dependencies
+- ✅ Update Flutter SDK: `flutter upgrade`
+- ✅ Check for dependency version conflicts in `pubspec.yaml`
+- ✅ Restart IDE and rebuild project
 
-## Build APK
+### Cannot edit landmarks with images
+- ⚠️ This is a **known limitation** (see above)
+- Use workarounds: update text-only fields or recreate the landmark
 
-```bash
-flutter build apk --release
-```
+## 🎯 Future Enhancements
 
-## Troubleshooting
+Potential improvements for future versions:
+- ✨ Fix PUT request image upload functionality
+- 🔍 Add search and filter capabilities for landmarks
+- 🏷️ Implement landmark categories and tags
+- 👤 Add user authentication and profiles
+- 📱 Support landscape orientation
+- 🔗 Add landmark sharing via link or social media
+- 🧭 Include directions/navigation to landmarks using Google Maps integration
+- 📤 Export landmarks to CSV, JSON, or KML format
+- 🌐 Multi-language support (Bengali, English)
+- ⭐ Favorite landmarks feature
+- 📊 Statistics dashboard (most visited, recently added, etc.)
 
-### Location not working
-- Enable location services
-- Grant location permissions
-- Check GPS signal
+## 🎨 Design Philosophy
 
-### Images not loading
-- Check internet connection
-- Verify API endpoint
-- Check image URLs
+**Dark Theme (Default):**
+- Futuristic aesthetic with navy gradients
+- Neon accents: Cyan (#00F0FF), Magenta (#FF00E5), Green (#00FF88)
+- Glass morphism effects with semi-transparent cards
+- Glow effects on interactive elements
 
-### Offline mode
-- App automatically switches to offline
-- Cached data displayed
-- Sync when online restored
+**Light Theme:**
+- Clean, minimalist design
+- High contrast with black text on white backgrounds
+- Blue accent color (#0066FF) for primary actions
+- Subtle shadows for depth
+
+Both themes ensure readability and accessibility while maintaining a modern, professional appearance.
+
+
+## 👨‍💻 Developer
+
+**Shakil Ahmed**
+- GitHub: [@shakilofficial0](https://github.com/shakilofficial0)
+- Project: NatokMap - Bangladesh Landmarks Management App
+
+## 🙏 Acknowledgments
+
+- **OpenStreetMap** for providing free map tiles and mapping services
+- **Backend API** hosted at `labs.anontech.info` by course instructor
+- **Flutter Team** for the excellent cross-platform framework
+- **Course Instructor** for project guidance and requirements
+- **Dart Packages Community** for the amazing open-source packages
 
 ---
 
+**Version:** 1.0.0  
+**Last Updated:** December 9, 2025  
 **Built with Flutter & ❤️**
