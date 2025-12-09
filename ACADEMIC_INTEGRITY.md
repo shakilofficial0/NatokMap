@@ -4,7 +4,6 @@
 
 **Student Name:** Shakil Ahmed  
 **Course:** CSE489  
-**Institution:** Bangladesh University  
 **Date:** December 9, 2025
 
 ---
