@@ -88,17 +88,30 @@ class _FormViewState extends State<FormView> {
   }
 
   void _showImageSourceDialog() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         decoration: BoxDecoration(
-          gradient: AppTheme.navyGradient,
+          gradient: isDark 
+              ? AppTheme.navyGradient
+              : const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white,
+                    Color(0xFFF5F5F5),
+                  ],
+                ),
           borderRadius: const BorderRadius.vertical(
             top: Radius.circular(24),
           ),
           border: Border.all(
-            color: AppTheme.primaryNeon.withOpacity(0.3),
+            color: isDark 
+                ? AppTheme.primaryNeon.withOpacity(0.3)
+                : Colors.grey.withOpacity(0.3),
             width: 1,
           ),
         ),
@@ -112,7 +125,9 @@ class _FormViewState extends State<FormView> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryNeon.withOpacity(0.3),
+                    color: isDark 
+                        ? AppTheme.primaryNeon.withOpacity(0.3)
+                        : Colors.grey.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -123,9 +138,9 @@ class _FormViewState extends State<FormView> {
                 ),
                 const SizedBox(height: 20),
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.photo_library,
-                    color: AppTheme.primaryNeon,
+                    color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                   ),
                   title: Text(
                     'Gallery',
@@ -137,9 +152,9 @@ class _FormViewState extends State<FormView> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.camera_alt,
-                    color: AppTheme.primaryNeon,
+                    color: isDark ? AppTheme.primaryNeon : const Color(0xFF0066FF),
                   ),
                   title: Text(
                     'Camera',
@@ -211,7 +226,21 @@ class _FormViewState extends State<FormView> {
               ? 'Landmark updated successfully'
               : 'Landmark created successfully',
         );
-        Navigator.pop(context);
+        
+        // Only pop for edit mode, stay on page for create mode
+        if (_isEditMode) {
+          Navigator.pop(context);
+        } else {
+          // Clear form for new entry
+          _titleController.clear();
+          _latitudeController.clear();
+          _longitudeController.clear();
+          setState(() {
+            _selectedImage = null;
+          });
+          // Reload current location for next entry
+          _loadCurrentLocation();
+        }
       } else {
         showErrorDialog(
           context,
